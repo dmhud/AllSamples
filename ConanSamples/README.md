@@ -1,4 +1,4 @@
-#Instal latest version of conan
+# Instal latest version of conan
 
 Install latest version:
 ```

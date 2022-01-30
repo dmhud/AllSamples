@@ -6,10 +6,8 @@ mkdir build
 cd build  
 conan install ..
 ```
-`conan install` will do a few things:
-- fetch more than one library. In `conanfile.txt` specified only `libcurl`. Conan fetch transit dependencies of libcurl 
 
-Possible output of `conan install`
+Build with cmake:
 ```
-
+cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
 ```

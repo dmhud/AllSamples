@@ -26,7 +26,7 @@ Build and run with default profile, but ovveride build to Debug configuration:
 conan create . demo/testing -s build_type=Debug
 ```
 
-Build and run with default profile, but ovveride library type to dynamic (DLL):
+Build and run with default profile, but override library type to dynamic (DLL):
 ```
 conan create . demo/testing -o hello:shared=True
 ```

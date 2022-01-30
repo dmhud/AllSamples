@@ -30,3 +30,9 @@ build_type=Release
 [build_requires]
 [env]
 ```
+
+Create dependency graph in HTML format and open in browser
+```
+conan info .. --graph=graph.html
+graph.html
+```

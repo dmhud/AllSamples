@@ -14,3 +14,31 @@ File saved: test_package/conanfile.py
 File saved: test_package/CMakeLists.txt
 File saved: test_package/src/example.cpp
 ```
+
+
+Build and run with default profile:
+```
+conan create . demo/testing
+```
+
+Build and run with default profile, but ovveride build to Debug configuration:
+```
+conan create . demo/testing -s build_type=Debug
+```
+
+Build and run with default profile, but ovveride library type to dynamic (DLL):
+```
+conan create . demo/testing -o hello:shared=True
+```
+
+
+Possible Output:
+```
+...
+hello/0.1: Hello World Release!
+  hello/0.1: _M_X64 defined
+  hello/0.1: _MSC_VER1930
+  hello/0.1: _MSVC_LANG202002
+  hello/0.1: __cplusplus199711
+  ...
+```

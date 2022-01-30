@@ -34,3 +34,10 @@
 
 .idea
 **build**
+
+
+# Conan temporary files
+conanbuildinfo.*
+conaninfo.txt
+conan.lock
+graph_info.json

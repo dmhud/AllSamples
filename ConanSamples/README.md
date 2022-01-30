@@ -22,10 +22,9 @@ os=Windows
 os_build=Windows
 arch=x86_64
 arch_build=x86_64
-compiler=msvc
-compiler.version=193
-compiler.cppstd=20
-compiler.runtime=static
+compiler=Visual Studio
+compiler.runtime=MD
+compiler.version=16
 build_type=Release
 [options]
 [build_requires]

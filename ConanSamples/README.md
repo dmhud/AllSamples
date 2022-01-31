@@ -36,3 +36,21 @@ Create dependency graph in HTML format and open in browser
 conan info .. --graph=graph.html
 graph.html
 ```
+
+Create package with default profile
+```
+conan create .
+```
+
+Create package with other wettings
+```
+conan create . -s arch=x86 -s compiler.version=15 -s compiler.runtime=MT
+conan create . -s compiler.version=17 -s compiler.runtime=MT
+```
+
+Search packages in local cache (Last example with symbol @ - show info of all configurations/settings in package
+```
+conan search
+conan search hello/0.1
+conan search hello/0.1@
+```

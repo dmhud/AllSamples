@@ -3,12 +3,20 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <GitRootDir>$(SolutionDir)\..\..\</GitRootDir>
+    <BuildDir>$(SolutionDir)\build\</BuildDir>
+    <IntermediateDir>$(BuildDir)\Intermediate\</IntermediateDir>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />
   <ItemGroup>
     <BuildMacro Include="GitRootDir">
       <Value>$(GitRootDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BuildDir">
+      <Value>$(BuildDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="IntermediateDir">
+      <Value>$(IntermediateDir)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

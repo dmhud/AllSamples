@@ -37,6 +37,11 @@
 *.user
 .idea
 **build**
+x86
+x64
+Win32
+Debug
+Release
 
 
 # Conan temporary files

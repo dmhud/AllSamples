@@ -32,6 +32,9 @@
 *.app
 
 
+*.bak
+.vs
+*.user
 .idea
 **build**
 

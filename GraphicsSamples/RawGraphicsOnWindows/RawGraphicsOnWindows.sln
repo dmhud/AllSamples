@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1800
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RawDX11", "RawDX11", "{8E51FEDE-368C-43A4-A1F3-69C308AB3D09}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RawDX12", "RawDX12", "{A77301BE-E80F-47EB-A004-3955EEAA6339}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{39DF5055-3BBD-4EC8-9546-A8F0D09D0C52}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DX.Utils", "Common\DX.Utils\DX.Utils.vcxproj", "{504E8A02-08E2-4971-8CA3-88E6DD90CC95}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win.Utils", "Common\Win.Utils\Win.Utils.vcxproj", "{21252830-6795-442B-A343-B9829A1466A9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RunEmptyWindow", "RunEmptyWindow\RunEmptyWindow.vcxproj", "{791AB879-BA60-458B-A272-09651A60DA1C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{504E8A02-08E2-4971-8CA3-88E6DD90CC95}.Debug|x64.ActiveCfg = Debug|x64
+		{504E8A02-08E2-4971-8CA3-88E6DD90CC95}.Debug|x64.Build.0 = Debug|x64
+		{504E8A02-08E2-4971-8CA3-88E6DD90CC95}.Release|x64.ActiveCfg = Release|x64
+		{504E8A02-08E2-4971-8CA3-88E6DD90CC95}.Release|x64.Build.0 = Release|x64
+		{21252830-6795-442B-A343-B9829A1466A9}.Debug|x64.ActiveCfg = Debug|x64
+		{21252830-6795-442B-A343-B9829A1466A9}.Debug|x64.Build.0 = Debug|x64
+		{21252830-6795-442B-A343-B9829A1466A9}.Release|x64.ActiveCfg = Release|x64
+		{21252830-6795-442B-A343-B9829A1466A9}.Release|x64.Build.0 = Release|x64
+		{791AB879-BA60-458B-A272-09651A60DA1C}.Debug|x64.ActiveCfg = Debug|x64
+		{791AB879-BA60-458B-A272-09651A60DA1C}.Debug|x64.Build.0 = Debug|x64
+		{791AB879-BA60-458B-A272-09651A60DA1C}.Release|x64.ActiveCfg = Release|x64
+		{791AB879-BA60-458B-A272-09651A60DA1C}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{504E8A02-08E2-4971-8CA3-88E6DD90CC95} = {39DF5055-3BBD-4EC8-9546-A8F0D09D0C52}
+		{21252830-6795-442B-A343-B9829A1466A9} = {39DF5055-3BBD-4EC8-9546-A8F0D09D0C52}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D051B6A4-8EE0-4EAA-98BE-4E3D283948A8}
+	EndGlobalSection
+EndGlobal

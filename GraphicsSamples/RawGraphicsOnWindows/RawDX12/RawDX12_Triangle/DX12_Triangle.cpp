@@ -118,7 +118,7 @@ void DX12_Triangle::DrawTriangle(HWND hWnd, uint32_t windowWidth, uint32_t windo
      */
     UINT frameIndex;
     HANDLE fenceEvent;
-    UINT64 fenceValue;
+    UINT64 fenceValue = 1;
 
     // Create fence
     ID3D12Fence* fence;
@@ -219,7 +219,7 @@ void DX12_Triangle::DrawTriangle(HWND hWnd, uint32_t windowWidth, uint32_t windo
 
     // Create frame resources
     D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle(renderTargetViewHeap->GetCPUDescriptorHandleForHeapStart());
-
+    
     // Create a RTV for each frame.
     for (UINT n = 0; n < backbufferCount; n++)
     {
@@ -232,7 +232,7 @@ void DX12_Triangle::DrawTriangle(HWND hWnd, uint32_t windowWidth, uint32_t windo
      * Root Signature
      */
      // Declare Handles
-    ID3D12RootSignature* rootSignature;
+    ID3D12RootSignature* rootSignature = nullptr;
 
     // Determine if we can get Root Signature Version 1.1:
     D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
@@ -309,11 +309,10 @@ void DX12_Triangle::DrawTriangle(HWND hWnd, uint32_t windowWidth, uint32_t windo
     Vertex vertexBufferData[3] = { {{ 1.0f, -1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
                                    {{-1.0f, -1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}},
                                    {{ 0.0f,  1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}} };
+    // Declare Handles
+    ID3D12Resource* vertexBuffer;
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
     {
-        // Declare Handles
-        ID3D12Resource* vertexBuffer;
-        D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
-
         const UINT vertexBufferSize = sizeof(vertexBufferData);
 
         D3D12_HEAP_PROPERTIES heapProps;
@@ -362,14 +361,14 @@ void DX12_Triangle::DrawTriangle(HWND hWnd, uint32_t windowWidth, uint32_t windo
     /**
      * Index Buffer
      */
+     // Declare Data
+    uint32_t indexBufferData[3] = { 0, 1, 2 };
+
+    // Declare Handles
+    ID3D12Resource* indexBuffer;
+    D3D12_INDEX_BUFFER_VIEW indexBufferView;
+
     {
-        // Declare Data
-        uint32_t indexBufferData[3] = { 0, 1, 2 };
-
-        // Declare Handles
-        ID3D12Resource* indexBuffer;
-        D3D12_INDEX_BUFFER_VIEW indexBufferView;
-
         const UINT indexBufferSize = sizeof(indexBufferData);
 
         D3D12_HEAP_PROPERTIES heapProps;
@@ -421,9 +420,9 @@ void DX12_Triangle::DrawTriangle(HWND hWnd, uint32_t windowWidth, uint32_t windo
     // Declare Data
     struct
     {
-        float4x4 projectionMatrix;
-        float4x4 modelMatrix;
-        float4x4 viewMatrix;
+        float4x4 projectionMatrix = float4x4::Identity();
+        float4x4 modelMatrix      = float4x4::Identity();
+        float4x4 viewMatrix       = float4x4::Identity();
     } cbVS;
 
     // Declare Handles
@@ -510,12 +509,7 @@ void DX12_Triangle::DrawTriangle(HWND hWnd, uint32_t windowWidth, uint32_t windo
     ThrowIfFailed(D3DCompileFromFile(pathVS.c_str(), nullptr, nullptr, "main",
         "vs_5_0", compileFlags, 0, &vertexShaderBlob,
         &errors), errors);
-
-    // Declare handles
-    D3D12_SHADER_BYTECODE vsBytecode;
-    vsBytecode.pShaderBytecode = vertexShaderBlob->GetBufferPointer();
-    vsBytecode.BytecodeLength = vertexShaderBlob->GetBufferSize();
-    
+        
     /**
      * Pixel Shader
      */
@@ -524,36 +518,212 @@ void DX12_Triangle::DrawTriangle(HWND hWnd, uint32_t windowWidth, uint32_t windo
     ThrowIfFailed(D3DCompileFromFile(pathPS.c_str(), nullptr, nullptr, "main",
         "ps_5_0", compileFlags, 0, &pixelShaderBlob,
         &errors), errors);
-
-    // Declare handles
-    D3D12_SHADER_BYTECODE psBytecode;
-    psBytecode.pShaderBytecode = pixelShaderBlob->GetBufferPointer();
-    psBytecode.BytecodeLength = pixelShaderBlob->GetBufferSize();
-
+    
     /**
      * Pipeline State
      */
+     // Declare handles
+    ID3D12PipelineState* pipelineState;
+
+    // Define the Graphics Pipeline
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+
+    // Input Assembly
+    D3D12_INPUT_ELEMENT_DESC inputElementDescs[] = {
+        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+        {"COLOR",    0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0} };
+    psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
+
+    // Resources
+    psoDesc.pRootSignature = rootSignature;
+
+    // Vertex Shader
+    D3D12_SHADER_BYTECODE vsBytecode;
+    vsBytecode.pShaderBytecode = vertexShaderBlob->GetBufferPointer();
+    vsBytecode.BytecodeLength = vertexShaderBlob->GetBufferSize();
+    psoDesc.VS = vsBytecode;
+
+    // Pixel Shader
+    D3D12_SHADER_BYTECODE psBytecode;
+    psBytecode.pShaderBytecode = pixelShaderBlob->GetBufferPointer();
+    psBytecode.BytecodeLength = pixelShaderBlob->GetBufferSize();
+    psoDesc.PS = psBytecode;
+
+    // Rasterization
+    D3D12_RASTERIZER_DESC rasterDesc;
+    rasterDesc.FillMode = D3D12_FILL_MODE_SOLID;
+    rasterDesc.CullMode = D3D12_CULL_MODE_NONE;
+    rasterDesc.FrontCounterClockwise = FALSE;
+    rasterDesc.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
+    rasterDesc.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
+    rasterDesc.SlopeScaledDepthBias = D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
+    rasterDesc.DepthClipEnable = TRUE;
+    rasterDesc.MultisampleEnable = FALSE;
+    rasterDesc.AntialiasedLineEnable = FALSE;
+    rasterDesc.ForcedSampleCount = 0;
+    rasterDesc.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
+    psoDesc.RasterizerState = rasterDesc;
+    psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+    // Color/Blend
+    D3D12_BLEND_DESC blendDesc;
+    blendDesc.AlphaToCoverageEnable = FALSE;
+    blendDesc.IndependentBlendEnable = FALSE;
+    const D3D12_RENDER_TARGET_BLEND_DESC defaultRenderTargetBlendDesc = {
+        FALSE,
+        FALSE,
+        D3D12_BLEND_ONE,
+        D3D12_BLEND_ZERO,
+        D3D12_BLEND_OP_ADD,
+        D3D12_BLEND_ONE,
+        D3D12_BLEND_ZERO,
+        D3D12_BLEND_OP_ADD,
+        D3D12_LOGIC_OP_NOOP,
+        D3D12_COLOR_WRITE_ENABLE_ALL,
+    };
+    for (UINT i = 0; i < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i)
+        blendDesc.RenderTarget[i] = defaultRenderTargetBlendDesc;
+    psoDesc.BlendState = blendDesc;
+
+    // Depth/Stencil State
+    psoDesc.DepthStencilState.DepthEnable = FALSE;
+    psoDesc.DepthStencilState.StencilEnable = FALSE;
+    psoDesc.SampleMask = UINT_MAX;
+
+    // Output
+    psoDesc.NumRenderTargets = 1;
+    psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    psoDesc.SampleDesc.Count = 1;
+
+    // Create the raster pipeline state
+    try
+    {
+        ThrowIfFailed(device->CreateGraphicsPipelineState(
+            &psoDesc, IID_PPV_ARGS(&pipelineState)));
+    }
+    catch (std::exception& e)
+    {
+        std::cout << "Failed to create Graphics Pipeline!";
+    }
 
     ///////////////////////////////
     ///   Encoding Commands     ///
     ///////////////////////////////
+    // Declare handles
+    ID3D12PipelineState* initialPipelineState = nullptr;
+    ID3D12GraphicsCommandList* commandList;
+
+    // Create the command list.
+    ThrowIfFailed(device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
+        commandAllocator, initialPipelineState,
+        IID_PPV_ARGS(&commandList)));
+
+    // Command lists are created in the recording state, but there is nothing to record yet.
+    ThrowIfFailed(commandList->Close());
+
+
+
+    // Reset the command list and add new commands.
+    ThrowIfFailed(commandAllocator->Reset());
+
+
+    // Begin using the Raster Graphics Pipeline
+    ThrowIfFailed(commandList->Reset(commandAllocator, pipelineState));
+
+    // Setup Resources
+    commandList->SetGraphicsRootSignature(rootSignature);
+    ID3D12DescriptorHeap* pDescriptorHeaps[] = { constantBufferHeap };
+    commandList->SetDescriptorHeaps(_countof(pDescriptorHeaps), pDescriptorHeaps);
+    D3D12_GPU_DESCRIPTOR_HANDLE
+        cbvHandle(constantBufferHeap->GetGPUDescriptorHandleForHeapStart());
+    commandList->SetGraphicsRootDescriptorTable(0, cbvHandle);
+
+    // Indicate that the back buffer will be used as a render target.
+    D3D12_RESOURCE_BARRIER renderTargetBarrier;
+    renderTargetBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    renderTargetBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    renderTargetBarrier.Transition.pResource = renderTargets[frameIndex];
+    renderTargetBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+    renderTargetBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    renderTargetBarrier.Transition.Subresource =
+        D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    commandList->ResourceBarrier(1, &renderTargetBarrier);
+
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandleOM(renderTargetViewHeap->GetCPUDescriptorHandleForHeapStart());
+    rtvHandleOM.ptr = rtvHandleOM.ptr + (frameIndex * rtvDescriptorSize);
+    commandList->OMSetRenderTargets(1, &rtvHandleOM, FALSE, nullptr);
+
+    // Record raster commands.
+    const float clearColor[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+    commandList->RSSetViewports(1, &viewport);
+    commandList->RSSetScissorRects(1, &surfaceSize);
+    commandList->ClearRenderTargetView(rtvHandleOM, clearColor, 0, nullptr);
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+    commandList->IASetIndexBuffer(&indexBufferView);
+
+    commandList->DrawIndexedInstanced(3, 1, 0, 0, 0);
+
+    // Indicate that the back buffer will now be used to present.
+    D3D12_RESOURCE_BARRIER presentBarrier;
+    presentBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    presentBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    presentBarrier.Transition.pResource = renderTargets[frameIndex];
+    presentBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    presentBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+    presentBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+    commandList->ResourceBarrier(1, &presentBarrier);
+
+    ThrowIfFailed(commandList->Close());
+
 
     ///////////////////////////////
     ///       Rendering         ///
     ///////////////////////////////
     
+    /**
+     * Update Uniforms
+     */
+    D3D12_RANGE readRange;
+    readRange.Begin = 0;
+    readRange.End = 0;
+
+    ThrowIfFailed(constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&mappedConstantBuffer)));
+    memcpy(mappedConstantBuffer, &cbVS, sizeof(cbVS));
+    constantBuffer->Unmap(0, &readRange);
+
+    //setupCommands();
+
+    ID3D12CommandList* ppCommandLists[] = { commandList };
+    commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
     /**
-     * Viewport
+     * Present
      */
+    swapchain->Present(1, 0);
 
-    /**
-     * Draw Calls
-     */
 
-     ///////////////////////////////
-     ///    Destroy Handles      ///
-     ///////////////////////////////
+    // Create an event handle to use for frame synchronization.
+    fenceEvent = CreateEventW(nullptr, FALSE, FALSE, nullptr);
+    if (fenceEvent == nullptr)
+        ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
 
-    int a = 0;
+    // then wait till finished to continue execution
+    const UINT64 fenceV = fenceValue;
+    ThrowIfFailed(commandQueue->Signal(fence, fenceV));
+    fenceValue++;
+
+    if (fence->GetCompletedValue() < fenceV)
+    {
+        ThrowIfFailed(fence->SetEventOnCompletion(fenceV, fenceEvent));
+        WaitForSingleObject(fenceEvent, INFINITE);
+    }
+
+    frameIndex = swapchain->GetCurrentBackBufferIndex();
+
+    ///////////////////////////////
+    ///    Destroy Handles      ///
+    ///////////////////////////////
+    
 }

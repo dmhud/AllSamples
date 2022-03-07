@@ -3,10 +3,13 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <GitRootDir>$(SolutionDir)\..\..\</GitRootDir>
-    <BuildDir>$(SolutionDir)\build\</BuildDir>
+    <BuildDir>$(SolutionDir)\build\$(ProjectName)\</BuildDir>
     <IntermediateDir>$(BuildDir)\Intermediate\</IntermediateDir>
   </PropertyGroup>
-  <PropertyGroup />
+  <PropertyGroup>
+    <OutDir>$(BuildDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(IntermediateDir)$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>

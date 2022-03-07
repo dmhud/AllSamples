@@ -91,7 +91,7 @@ void DX11_Triangle::DrawTriangle(HWND hWnd, uint32_t windowWidth, uint32_t windo
 
 
     // Optionally enable the Debug Controller to validate your commands on runtime.
-    ID3D11Debug* debugController;
+    ID3D11Debug* debugController = nullptr;
 #if defined(_DEBUG)
     ThrowIfFailed(device->QueryInterface(IID_PPV_ARGS(&debugController)));
 #endif
@@ -371,8 +371,7 @@ void DX11_Triangle::DrawTriangle(HWND hWnd, uint32_t windowWidth, uint32_t windo
 
     // Create the depth stencil state.
     ID3D11DepthStencilState* depthStencilState;
-    ThrowIfFailed(device->CreateDepthStencilState(&depthStencilDesc,
-        &depthStencilState));
+    ThrowIfFailed(device->CreateDepthStencilState(&depthStencilDesc, &depthStencilState));
 
     // Set the depth stencil state.
     deviceContext->OMSetDepthStencilState(depthStencilState, 1);
@@ -480,6 +479,28 @@ void DX11_Triangle::DrawTriangle(HWND hWnd, uint32_t windowWidth, uint32_t windo
     ///////////////////////////////
     ///     Release pointers    ///
     ///////////////////////////////
+    if (factory)                factory->Release();
+    if (adapter)                adapter->Release();
+    if (adapterOutput)          adapterOutput->Release();
+    if (device)                 device->Release();
+    if (deviceContext)          deviceContext->Release();
+    if (debugController)        debugController->Release();
+    if (swapchain)              swapchain->Release();
+    if (texBackBuffer)          texBackBuffer->Release();
+    if (rtv)                    rtv->Release();
+    if (texDepthStencilBuffer)  texDepthStencilBuffer->Release();
+    if (dsv)                    dsv->Release();
+    if (vertexBuffer)           vertexBuffer->Release();
+    if (indexBuffer)            indexBuffer->Release();
+    if (constantBuffer)         constantBuffer->Release();
+    if (errors)                 errors->Release();
+    if (vertexShaderBlob)       vertexShaderBlob->Release();
+    if (vertexShader)           vertexShader->Release();
+    if (pixelShaderBlob)        pixelShaderBlob->Release();
+    if (pixelShader)            pixelShader->Release();
+    if (inputLayout)            inputLayout->Release();
+    if (depthStencilState)      depthStencilState->Release();
+    if (rasterState)            rasterState->Release();
 
     return;
 }

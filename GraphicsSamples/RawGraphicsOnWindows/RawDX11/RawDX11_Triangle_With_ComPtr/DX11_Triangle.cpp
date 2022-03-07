@@ -90,9 +90,9 @@ void DX11_Triangle::DrawTriangle(HWND hWnd, uint32_t windowWidth, uint32_t windo
 
 
     // Optionally enable the Debug Controller to validate your commands on runtime.
-    ComPtr<ID3D11Debug> debugController;
 #if defined(_DEBUG)
-    ThrowIfFailed(device->QueryInterface(IID_PPV_ARGS(debugController.GetAddressOf())));
+    ComPtr<ID3D11Debug> debugController;
+    ThrowIfFailed(device.As(&debugController));
 #endif
 
     ///////////////////////////////

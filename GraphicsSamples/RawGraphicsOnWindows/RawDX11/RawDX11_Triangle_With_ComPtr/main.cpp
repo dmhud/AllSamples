@@ -5,7 +5,7 @@ int main(int argc, char *argv[])
 {
     uint32_t windowWidth = 800;
     uint32_t windowHeight = 600;
-    win::Window window(windowWidth, windowHeight, L"EmptyWindow", L"RunEmptyWindow_WindowClassName");
+    win::Window window(windowWidth, windowHeight, L"RawDX11_Triangle_With_ComPtr", L"RawDX11_Triangle_With_ComPtr_WindowClassName");
     window.Show();
 
     // Sample:

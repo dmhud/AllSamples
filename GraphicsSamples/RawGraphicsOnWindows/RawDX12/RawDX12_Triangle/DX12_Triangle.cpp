@@ -725,5 +725,31 @@ void DX12_Triangle::DrawTriangle(HWND hWnd, uint32_t windowWidth, uint32_t windo
     ///////////////////////////////
     ///    Destroy Handles      ///
     ///////////////////////////////
-    
+    if (factory)                                    factory->Release();
+    if (debugController)                            debugController->Release();
+    if (dc)                                         dc->Release();
+    if (adapter)                                    adapter->Release();
+    if (device)                                     device->Release();
+    if (debugDevice)                                debugDevice->Release();
+    if (commandQueue)                               commandQueue->Release();
+    if (commandAllocator)                           commandAllocator->Release();
+    if (fence)                                      fence->Release();
+    if (renderTargetViewHeap)                       renderTargetViewHeap->Release();
+    for (size_t i = 0; i < backbufferCount; i++)
+        if (renderTargets[i])                       renderTargets[i]->Release();
+    if (swapchain)                                  swapchain->Release();
+    if (rootSignature)                              rootSignature->Release();
+    if (signature)                                  signature->Release();
+    if (error)                                      error->Release();
+    if (vertexBuffer)                               vertexBuffer->Release();
+    if (indexBuffer)                                indexBuffer->Release();
+    if (constantBuffer)                             constantBuffer->Release();
+    if (constantBufferHeap)                         constantBufferHeap->Release();
+    if (errors)                                     errors->Release();
+    if (vertexShaderBlob)                           vertexShaderBlob->Release();
+    if (pixelShaderBlob)                            pixelShaderBlob->Release();
+    if (pipelineState)                              pipelineState->Release();
+    if (initialPipelineState)                       initialPipelineState->Release();
+    if (commandList)                                commandList->Release();
+    CloseHandle(fenceEvent);
 }

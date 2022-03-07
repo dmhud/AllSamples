@@ -44,4 +44,4 @@ namespace win
         SizeChangedCallback _sizeChangedCallback;
     };
     
-}
+} // namespace win

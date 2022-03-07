@@ -178,4 +178,4 @@ namespace win
 
         return message;
     }
-}
+} // namespace win

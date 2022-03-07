@@ -23,6 +23,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RawDX12_Triangle", "RawDX12
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RawVulkan_Triangle", "RawVulkan\RawVulkan_Triangle\RawVulkan_Triangle.vcxproj", "{D98922BF-7F95-4443-BA0D-D6453AFA130A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Math.Utils", "Common\Math.Utils\Math.Utils.vcxproj", "{53F8C194-B5BD-4346-84B0-4D38C99D133F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -53,6 +55,10 @@ Global
 		{D98922BF-7F95-4443-BA0D-D6453AFA130A}.Debug|x64.Build.0 = Debug|x64
 		{D98922BF-7F95-4443-BA0D-D6453AFA130A}.Release|x64.ActiveCfg = Release|x64
 		{D98922BF-7F95-4443-BA0D-D6453AFA130A}.Release|x64.Build.0 = Release|x64
+		{53F8C194-B5BD-4346-84B0-4D38C99D133F}.Debug|x64.ActiveCfg = Debug|x64
+		{53F8C194-B5BD-4346-84B0-4D38C99D133F}.Debug|x64.Build.0 = Debug|x64
+		{53F8C194-B5BD-4346-84B0-4D38C99D133F}.Release|x64.ActiveCfg = Release|x64
+		{53F8C194-B5BD-4346-84B0-4D38C99D133F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,6 +69,7 @@ Global
 		{A7734F1C-CDAD-456F-9DAB-64AC02B6CD02} = {8E51FEDE-368C-43A4-A1F3-69C308AB3D09}
 		{49C473F0-8216-44B2-85E0-67AAC6E7B61D} = {A77301BE-E80F-47EB-A004-3955EEAA6339}
 		{D98922BF-7F95-4443-BA0D-D6453AFA130A} = {1F8C6D8F-83AD-4E48-9766-3042EC632774}
+		{53F8C194-B5BD-4346-84B0-4D38C99D133F} = {39DF5055-3BBD-4EC8-9546-A8F0D09D0C52}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D051B6A4-8EE0-4EAA-98BE-4E3D283948A8}
